@@ -389,7 +389,7 @@ const ContactSection = () => (
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Email Principal</p>
-                    <p className="text-slate-100 font-medium">hola@erubanel.com</p>
+                    <p className="text-slate-100 font-medium">gace860403@gmail.com</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-5">
@@ -398,7 +398,7 @@ const ContactSection = () => (
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Base de Operaciones</p>
-                    <p className="text-slate-100 font-medium">Costa Chica, Guerrero, Mx.</p>
+                    <p className="text-slate-100 font-medium">Cruz Grande, Gro.</p>
                   </div>
                 </li>
               </ul>
@@ -417,22 +417,26 @@ const ContactSection = () => (
 
         {/* Formulario */}
         <FadeIn delay={400} className="lg:col-span-3">
-          <form className="bg-[#0a0a0f] p-8 sm:p-12 rounded-3xl border border-slate-800 shadow-2xl flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
+          <form
+            action="https://formspree.io/f/TU_ID_AQUI"
+            method="POST"
+            className="bg-[#0a0a0f] p-8 sm:p-12 rounded-3xl border border-slate-800 shadow-2xl flex flex-col gap-8"
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div className="space-y-3">
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Tu Nombre</label>
-                <input type="text" className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700" placeholder="Ej. Juan Pérez" />
+                <input type="text" name="nombre" required className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700" placeholder="Ej. Juan Pérez" />
               </div>
               <div className="space-y-3">
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Tu Correo</label>
-                <input type="email" className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700" placeholder="juan@correo.com" />
+                <input type="email" name="email" required className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700" placeholder="juan@correo.com" />
               </div>
             </div>
 
             <div className="space-y-3">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Área de Interés</label>
               <div className="relative">
-                <select defaultValue="" className="w-full bg-slate-900/70 text-slate-300 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700 appearance-none cursor-pointer">
+                <select name="interes" defaultValue="" required className="w-full bg-slate-900/70 text-slate-300 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700 appearance-none cursor-pointer">
                   <option value="" disabled>Selecciona una opción...</option>
                   <option value="dev">Desarrollo Web (EG Labs)</option>
                   <option value="ia">Automatización IA</option>
@@ -447,10 +451,10 @@ const ContactSection = () => (
 
             <div className="space-y-3">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Detalles del Proyecto</label>
-              <textarea rows="5" className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700 resize-none" placeholder="Cuéntame brevemente qué necesitas..."></textarea>
+              <textarea name="mensaje" required rows="5" className="w-full bg-slate-900/70 text-white rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all border border-slate-800 hover:border-slate-700 resize-none" placeholder="Cuéntame brevemente qué necesitas..."></textarea>
             </div>
 
-            <button className="w-full py-5 bg-white text-black hover:bg-slate-200 rounded-2xl font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 shadow-[0_10px_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-3 active:scale-95">
+            <button type="submit" className="w-full py-5 bg-white text-black hover:bg-slate-200 rounded-2xl font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 shadow-[0_10px_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-3 active:scale-95">
               Enviar Mensaje <Send size={20} />
             </button>
           </form>
@@ -516,8 +520,8 @@ export default function App() {
               <button
                 onClick={() => handleNavClick(item.id)}
                 className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center transition-all duration-500 relative overflow-hidden group/btn ${activeSection === item.id
-                    ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]'
-                    : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+                  : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800/50'
                   }`}
                 aria-label={item.label}
               >
