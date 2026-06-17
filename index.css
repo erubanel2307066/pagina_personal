@@ -116,7 +116,7 @@
   }
 
   .hero-title {
-    @apply text-4xl font-black leading-[0.98] text-white sm:text-5xl lg:text-6xl xl:text-7xl;
+    @apply text-4xl font-black leading-[0.98] text-white sm:text-5xl lg:text-6xl;
   }
 
   .hero-text {
@@ -153,7 +153,7 @@
   }
 
   .hero-panel {
-    @apply relative mx-auto w-full max-w-[430px] overflow-hidden rounded-lg border border-white/12 bg-white/[0.04] shadow-2xl shadow-black/35 xl:max-w-[470px];
+    @apply relative mx-auto w-full max-w-[390px] overflow-hidden rounded-lg border border-white/12 bg-white/[0.04] shadow-2xl shadow-black/35 xl:max-w-[420px];
   }
 
   .hero-photo {

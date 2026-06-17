@@ -324,7 +324,7 @@ const ContactSection = () => (
           </div>
 
           <div className="social-list" aria-label="Redes sociales">
-            <a href="#" aria-label="GitHub"><Github size={19} /></a>
+            <a href="https://github.com/erubanel2307066" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={19} /></a>
             <a href="#" aria-label="LinkedIn"><Linkedin size={19} /></a>
           </div>
         </div>
