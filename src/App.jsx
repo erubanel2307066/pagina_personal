@@ -150,12 +150,29 @@ const HomeSection = ({ onNavigate }) => (
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="hero-title"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 1 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+              },
+            }}
+            className="hero-title flex flex-wrap gap-[0.25em]"
           >
-            Construyo experiencias digitales que se ven bien y trabajan mejor.
+            {"Construyo experiencias digitales que se ven bien y trabajan mejor.".split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 14, stiffness: 100 } }
+                }}
+                className="inline-block"
+              >
+                {word}
+              </motion.span>
+            ))}
           </motion.h1>
 
           <motion.p
@@ -173,13 +190,23 @@ const HomeSection = ({ onNavigate }) => (
             transition={{ duration: 0.7, delay: 0.3 }}
             className="hero-actions"
           >
-            <button onClick={() => onNavigate('portfolio')} className="button-primary">
+            <motion.button 
+              onClick={() => onNavigate('portfolio')} 
+              className="button-primary"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Ver proyectos
               <ArrowRight size={18} />
-            </button>
-            <button onClick={() => onNavigate('contact')} className="button-secondary">
+            </motion.button>
+            <motion.button 
+              onClick={() => onNavigate('contact')} 
+              className="button-secondary"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Hablemos
-            </button>
+            </motion.button>
           </motion.div>
 
           <motion.div
@@ -189,15 +216,25 @@ const HomeSection = ({ onNavigate }) => (
             className="service-strip"
           >
             {services.map((service) => (
-              <span key={service}>{service}</span>
+              <motion.span 
+                key={service}
+                whileHover={{ y: -2 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {service}
+              </motion.span>
             ))}
           </motion.div>
         </div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.15 }}
+          animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+          transition={{ 
+            opacity: { duration: 0.8, delay: 0.15 },
+            scale: { duration: 0.8, delay: 0.15 },
+            y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }
+          }}
           className="hero-panel"
         >
           <img src="/Nueva_foto.png" alt="Erubanel Gallo" className="hero-photo" />
