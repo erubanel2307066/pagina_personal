@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Mail } from 'lucide-react';
 
 const links = [
   { icon: Github, href: 'https://github.com/erubanel2307066', label: 'GitHub' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
   { icon: Mail, href: 'mailto:gace860403@gmail.com', label: 'Email' },
 ];
 

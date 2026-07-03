@@ -1,39 +1,76 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Github, Linkedin, Mail, MapPin, Send } from 'lucide-react';
+import { CheckCircle2, Github, Linkedin, Mail, MapPin, Send, Clock } from 'lucide-react';
 import { Section } from './Section';
 
+const LIMITS = { name: 100, email: 254, message: 2000 };
+const COOLDOWN = 30;
 const initialForm = { name: '', email: '', message: '' };
-const initialErrors = {};
+
+function sanitize(str) {
+  return str.replace(/<[^>]*>/g, '').replace(/[&<>"']/g, '');
+}
 
 function validate(form) {
   const errors = {};
-  if (!form.name.trim()) errors.name = 'El nombre es requerido';
-  if (!form.email.trim()) errors.email = 'El correo es requerido';
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Correo inválido';
-  if (!form.message.trim()) errors.message = 'El mensaje es requerido';
+  const name = form.name.trim();
+  const email = form.email.trim();
+  const message = form.message.trim();
+
+  if (!name) errors.name = 'El nombre es requerido';
+  else if (name.length > LIMITS.name) errors.name = `Máximo ${LIMITS.name} caracteres`;
+
+  if (!email) errors.email = 'El correo es requerido';
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Correo inválido';
+  else if (email.length > LIMITS.email) errors.email = `Máximo ${LIMITS.email} caracteres`;
+
+  if (!message) errors.message = 'El mensaje es requerido';
+  else if (message.length > LIMITS.message) errors.message = `Máximo ${LIMITS.message} caracteres`;
+
   return errors;
 }
 
 export const ContactSection = () => {
   const [form, setForm] = useState(initialForm);
-  const [errors, setErrors] = useState(initialErrors);
+  const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const timerRef = useRef(null);
+
+  const startCooldown = useCallback(() => {
+    setCooldown(COOLDOWN);
+    timerRef.current = setInterval(() => {
+      setCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const sanitized = sanitize(value);
+    if (sanitized.length > LIMITS[name]) return;
+    setForm((prev) => ({ ...prev, [name]: sanitized }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (cooldown > 0) return;
+
     const validationErrors = validate(form);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+
     setSubmitted(true);
+    startCooldown();
     setForm(initialForm);
     setTimeout(() => setSubmitted(false), 4000);
   };
@@ -68,7 +105,7 @@ export const ContactSection = () => {
 
             <div className="social-list" aria-label="Redes sociales">
               <a href="https://github.com/erubanel2307066" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={19} /></a>
-              <a href="#" aria-label="LinkedIn"><Linkedin size={19} /></a>
+              <Linkedin size={19} className="text-slate-400" />
             </div>
           </motion.div>
 
@@ -90,8 +127,10 @@ export const ContactSection = () => {
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Tu nombre"
+                  maxLength={LIMITS.name}
                   className={errors.name ? 'input-error' : ''}
                   aria-invalid={!!errors.name}
+                  autoComplete="name"
                 />
                 {errors.name && <span className="form-error">{errors.name}</span>}
               </label>
@@ -103,28 +142,44 @@ export const ContactSection = () => {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="tu@correo.com"
+                  maxLength={LIMITS.email}
                   className={errors.email ? 'input-error' : ''}
                   aria-invalid={!!errors.email}
+                  autoComplete="email"
                 />
                 {errors.email && <span className="form-error">{errors.email}</span>}
               </label>
             </div>
             <label>
-              <span>Mensaje</span>
+              <span>Mensaje ({form.message.length}/{LIMITS.message})</span>
               <textarea
                 name="message"
                 value={form.message}
                 onChange={handleChange}
                 rows="5"
                 placeholder="Cuéntame qué quieres construir..."
+                maxLength={LIMITS.message}
                 className={errors.message ? 'input-error' : ''}
                 aria-invalid={!!errors.message}
               />
               {errors.message && <span className="form-error">{errors.message}</span>}
             </label>
-            <button type="submit" className="button-primary full">
-              <Send size={18} />
-              {submitted ? 'Mensaje enviado' : 'Enviar mensaje'}
+            <button
+              type="submit"
+              className="button-primary full"
+              disabled={cooldown > 0}
+            >
+              {cooldown > 0 ? (
+                <>
+                  <Clock size={18} />
+                  Espera {cooldown}s
+                </>
+              ) : (
+                <>
+                  <Send size={18} />
+                  {submitted ? 'Mensaje enviado' : 'Enviar mensaje'}
+                </>
+              )}
             </button>
             {submitted && (
               <motion.p

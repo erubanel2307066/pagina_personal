@@ -275,11 +275,11 @@
   }
 
   .button-primary {
-    @apply bg-white text-slate-950 hover:bg-brand-cyan;
+    @apply bg-white text-slate-950 hover:bg-brand-cyan disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white;
   }
 
   [data-theme="light"] .button-primary {
-    @apply bg-slate-900 text-white hover:bg-brand-cyan hover:text-slate-950;
+    @apply bg-slate-900 text-white hover:bg-brand-cyan hover:text-slate-950 disabled:hover:bg-slate-900;
   }
 
   .button-secondary {
@@ -790,16 +790,36 @@
     @apply absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-cyan px-4 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-950;
   }
 
+  .pricing-header {
+    @apply mt-2 text-center;
+  }
+
   .pricing-name {
-    @apply mt-2 text-2xl font-bold text-white transition-colors;
+    @apply text-2xl font-bold text-white transition-colors;
   }
 
   [data-theme="light"] .pricing-name {
     @apply text-slate-900;
   }
 
+  .pricing-price-wrap {
+    @apply mt-1 flex items-baseline justify-center gap-1;
+  }
+
   .pricing-price {
-    @apply mt-1 text-3xl font-black text-brand-cyan;
+    @apply text-3xl font-black text-brand-cyan;
+  }
+
+  .pricing-currency {
+    @apply text-sm font-semibold text-brand-cyan/70;
+  }
+
+  .pricing-usd {
+    @apply mt-0.5 block text-xs text-slate-500;
+  }
+
+  [data-theme="light"] .pricing-usd {
+    @apply text-slate-400;
   }
 
   .pricing-desc {
