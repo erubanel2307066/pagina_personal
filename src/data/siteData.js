@@ -1,5 +1,7 @@
 import { Home, User, Briefcase, Mail } from 'lucide-react';
 
+export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xrpgvwqb';
+
 export const navItems = [
   { id: 'home', label: 'Inicio', icon: Home },
   { id: 'about', label: 'Perfil', icon: User },

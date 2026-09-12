@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Github, Linkedin, Mail, MapPin, Send, Clock } from 'lucide-react';
 import { Section } from './Section';
+import { FORMSPREE_ENDPOINT } from '../data/siteData';
 
 const LIMITS = { name: 100, email: 254, message: 2000 };
 const COOLDOWN = 30;
@@ -34,6 +35,8 @@ export const ContactSection = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const [cooldown, setCooldown] = useState(0);
   const timerRef = useRef(null);
 
@@ -57,11 +60,12 @@ export const ContactSection = () => {
     if (sanitized.length > LIMITS[name]) return;
     setForm((prev) => ({ ...prev, [name]: sanitized }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+    if (sendError) setSendError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (cooldown > 0) return;
+    if (cooldown > 0 || sending) return;
 
     const validationErrors = validate(form);
     if (Object.keys(validationErrors).length > 0) {
@@ -69,10 +73,35 @@ export const ContactSection = () => {
       return;
     }
 
-    setSubmitted(true);
-    startCooldown();
-    setForm(initialForm);
-    setTimeout(() => setSubmitted(false), 4000);
+    setSending(true);
+    setSendError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('name', form.name.trim());
+      formData.append('email', form.email.trim());
+      formData.append('message', form.message.trim());
+      formData.append('_subject', `Nuevo mensaje de ${form.name.trim()}`);
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al enviar el mensaje');
+      }
+
+      setSubmitted(true);
+      startCooldown();
+      setForm(initialForm);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch {
+      setSendError('No se pudo enviar el mensaje. Intenta de nuevo o contacta directamente por email.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -105,7 +134,7 @@ export const ContactSection = () => {
 
             <div className="social-list" aria-label="Redes sociales">
               <a href="https://github.com/erubanel2307066" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={19} /></a>
-              <Linkedin size={19} className="text-slate-400" />
+              <a href="https://linkedin.com/in/erubanel-gallo" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={19} /></a>
             </div>
           </motion.div>
 
@@ -167,12 +196,17 @@ export const ContactSection = () => {
             <button
               type="submit"
               className="button-primary full"
-              disabled={cooldown > 0}
+              disabled={cooldown > 0 || sending}
             >
               {cooldown > 0 ? (
                 <>
                   <Clock size={18} />
                   Espera {cooldown}s
+                </>
+              ) : sending ? (
+                <>
+                  <Send size={18} className="animate-pulse" />
+                  Enviando...
                 </>
               ) : (
                 <>
@@ -181,6 +215,15 @@ export const ContactSection = () => {
                 </>
               )}
             </button>
+            {sendError && (
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="form-error-message"
+              >
+                {sendError}
+              </motion.p>
+            )}
             {submitted && (
               <motion.p
                 initial={{ opacity: 0, y: 8 }}
