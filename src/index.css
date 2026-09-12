@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-space-grotesk: "Space Grotesk", sans-serif;
-  --font-inter: "Inter", sans-serif;
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
 
   --color-brand-background: #07090f;
   --color-brand-ink: #f7f8fb;
@@ -232,11 +231,11 @@
   }
 
   body {
-    @apply overflow-x-hidden bg-brand-background font-inter text-brand-ink antialiased transition-colors duration-300;
+    @apply overflow-x-hidden bg-brand-background font-jakarta text-brand-ink antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4 {
-    @apply font-space-grotesk tracking-tight;
+    @apply font-jakarta tracking-tight;
   }
 
   button, a, input, textarea {
